@@ -1,0 +1,114 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Link to Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Setting page</title>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4 max-w-xl">
+    <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+      <h1 class="text-3xl font-bold text-center text-gray-800">Awards Input Form</h1>
+      <form id="dynamic-form" class="space-y-6">
+        <div id="input-container"></div>
+        <div class="flex justify-end">
+          <button type="button" id="add-input" class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none">
+            Add Person
+          </button>
+        </div>
+        <button type="submit" class="w-full px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none">
+          Submit
+        </button>
+      </form>
+      <div class="mt-4">
+        <h2 class="text-xl font-bold text-gray-800">Form Data Preview</h2>
+        <pre id="form-data" class="mt-2 p-4 bg-gray-200 rounded-md overflow-auto max-h-40"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // app.js
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('dynamic-form');
+      const inputContainer = document.getElementById('input-container');
+      const addInputButton = document.getElementById('add-input');
+      const formDataOutput = document.getElementById('form-data');
+
+      let inputCount = 1;
+
+      // Function to add a new input field
+      const addInputField = () => {
+        const inputField = `
+          <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4 mt-4">
+            <input
+              type="text"
+              name="name${inputCount}"
+              class="flex-grow p-2 border border-gray-300 rounded-md w-full md:w-1/4 focus:outline-none"
+              placeholder="Name"
+            />
+            <input
+              type="text"
+              name="card_id${inputCount}"
+              class="flex-grow p-2 border border-gray-300 rounded-md w-full md:w-1/4 focus:outline-none"
+              placeholder="Lucky Number"
+            />
+            <input
+              type="text"
+              name="prize${inputCount}"
+              class="flex-grow p-2 border border-gray-300 rounded-md w-full md:w-1/4 focus:outline-none"
+              placeholder="Prize"
+            />
+            <input
+              type="email"
+              name="email${inputCount}"
+              class="flex-grow p-2 border border-gray-300 rounded-md w-full md:w-1/4 focus:outline-none"
+              placeholder="Price"
+            />
+            <button
+              type="button"
+              class="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 mt-4 md:mt-0 focus:outline-none"
+              onclick="removeInputField(this)"
+            >
+              Remove
+            </button>
+          </div>
+        `;
+
+        // Append new input field to input container
+        inputContainer.insertAdjacentHTML('beforeend', inputField);
+        inputCount++;
+      };
+
+      // Function to remove an input field
+      const removeInputField = (button) => {
+        const inputField = button.parentNode;
+        inputField.remove();
+      };
+
+      // Event listener for adding input field
+      addInputButton.addEventListener('click', addInputField);
+
+      // Event listener for form submission
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = {};
+        const inputs = form.querySelectorAll('input[type="text"], input[type="email"]');
+        
+        inputs.forEach(input => {
+          formData[input.name] = input.value;
+        });
+
+        // Display form data in pre element
+        formDataOutput.textContent = JSON.stringify(formData, null, 2);
+      });
+    });
+  </script>
+</body>
+</html>
